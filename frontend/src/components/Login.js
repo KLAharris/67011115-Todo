@@ -1,7 +1,12 @@
 // frontend/src/components/Login.js
 import React, { useState } from 'react';
 
-const API_URL = 'http://localhost:5001/api';
+// -----------------------------------------------------------------
+// ⬇️ REPLACE THE HARDCODED URL WITH THE ENVIRONMENT VARIABLE ⬇️
+// -----------------------------------------------------------------
+// Use import.meta.env to access environment variables exposed by
+// bundlers like Vite (which uses the VITE_ prefix).
+const API_URL = process.env.VITE_API_URL;
 
 function Login({ onLogin }) {
     const [username, setUsername] = useState('');
@@ -17,32 +22,30 @@ function Login({ onLogin }) {
         }
 
         try {
-            // Use Fetch API for POST request
+            // The API endpoint remains the same, but API_URL is now dynamic
             const response = await fetch(`${API_URL}/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ username }), // Convert object to JSON string
+                body: JSON.stringify({ username }), 
             });
 
-            // Check if the response status is OK (200-299)
             if (!response.ok) {
                 const errorData = await response.json();
                 setError(errorData.message || 'Login failed due to server error.');
                 return;
             }
 
-            const data = await response.json(); // Parse the response body as JSON
+            const data = await response.json(); 
 
             if (data.success) {
                 localStorage.setItem('todo_username', username);
-                onLogin(username); // Update App component state
+                onLogin(username); 
             } else {
                 setError(data.message || 'Login failed.');
             }
         } catch (err) {
-            // Handle network connection errors
             setError('Network error: Could not connect to the server.');
             console.error(err);
         }

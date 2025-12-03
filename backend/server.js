@@ -1,5 +1,7 @@
 // server.js
 
+require('dotenv').config({path: './backend.env'});
+
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
@@ -13,10 +15,11 @@ app.use(express.json()); // Enable reading JSON data from request body
 
 // --- MySQL Connection Setup ---
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root', // CHANGE THIS to your MySQL username
-    password: 'CEiAdmin0', // CHANGE THIS to your MySQL password
-    database: 'ceidb' // Ensure this matches your database name
+    // 2. REPLACE hardcoded values with process.env.VARIABLE_NAME
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME 
 });
 
 db.connect(err => {
